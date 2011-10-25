@@ -211,6 +211,23 @@ def unfollow(user, actor, send_action=False):
     if send_action:
         action.send(user, verb=_('stopped following'), target=actor)
 
+def is_following(user, actor):
+    """
+    Checks if a ``User`` -> ``Actor`` relationship exists.
+    Returns True if exists, False otherwise.
+
+    Syntax::
+
+        is_following(<user>, <actor>)
+
+    Example::
+
+        is_following(request.user, group)
+
+    """
+    return True if Follow.objects.filter(user=user, object_id=actor.pk,
+        content_type=ContentType.objects.get_for_model(actor)) else False
+
 def actor_stream(actor):
     return Action.objects.stream_for_actor(actor)
 actor_stream.__doc__ = Action.objects.stream_for_actor.__doc__
